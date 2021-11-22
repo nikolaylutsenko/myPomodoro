@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro", "MyPomodoro.csproj", "{7A2DDD4E-C4A3-4FCE-8963-D39A6CE8A579}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro.Dal", "MyPomodoro.Dal\MyPomodoro.Dal.csproj", "{A5B16463-5A42-437B-81A4-6F54569A7821}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro.Core", "MyPomodoro.Core\MyPomodoro.Core.csproj", "{F2C853D3-38FE-4D53-8E3F-868D4891248D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{7A2DDD4E-C4A3-4FCE-8963-D39A6CE8A579}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A2DDD4E-C4A3-4FCE-8963-D39A6CE8A579}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A2DDD4E-C4A3-4FCE-8963-D39A6CE8A579}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5B16463-5A42-437B-81A4-6F54569A7821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5B16463-5A42-437B-81A4-6F54569A7821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5B16463-5A42-437B-81A4-6F54569A7821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5B16463-5A42-437B-81A4-6F54569A7821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

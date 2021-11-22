@@ -1,5 +1,5 @@
 ﻿using System.Media;
-using System.Threading;
+using ShellProgressBar;
 
 namespace MyPomodoro
 {
@@ -18,7 +18,7 @@ namespace MyPomodoro
         // Save to Db
         // Ask what is next - by plan or personal chose
         
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Begin: // use for return to beginning
             Console.WriteLine("Choose what to start - 1)Concentrate; 2)Short break; 3)Long break?");
@@ -43,20 +43,47 @@ namespace MyPomodoro
             {
                 case '1':
                     // here must be method incupsulate all this shit with sound and ui
-                    var currentTime = TimeOnly.FromDateTime(DateTime.Now);
-                    var timePlus = currentTime.Second + 10;
-                    typewriter.PlayLooping();
-                    while (keepRunning)
+                    TimeOnly beginTime;
+                    await Task.Run(() =>
                     {
-                        currentTime = TimeOnly.FromDateTime(DateTime.Now);
-                        if (timePlus < currentTime.Second)
+                        const int totalTicks = 10;
+                        var option = new ProgressBarOptions
                         {
-                            keepRunning = false;
+                            ForegroundColor = ConsoleColor.Yellow,
+                            ForegroundColorDone = ConsoleColor.DarkGreen,
+                            BackgroundColor = ConsoleColor.DarkGray,
+                            BackgroundCharacter = '\u2593'
+                        };
+                        
+                        beginTime = TimeOnly.FromDateTime(DateTime.Now);
+                        var timePlus = beginTime.Second + totalTicks;
+                        
+                        typewriter.PlayLooping();
+                        
+                        using var pbar = new ProgressBar(totalTicks, "test", option);
+                        
+                        TimeOnly tickTime = beginTime;
+                        
+                        while (keepRunning)
+                        {
+                            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+
+                            if (tickTime.Second < currentTime.Second)
+                            {
+                                pbar.Tick();
+                                tickTime = currentTime;
+                            }
+                            
+                            if (timePlus < currentTime.Second)
+                            {
+                                keepRunning = false;
+                            }
                         }
-                        Console.WriteLine(++i);
-                        //Thread.Sleep(1000);
-                    }
-                    typewriter.Stop();
+                        
+                        typewriter.Stop();
+                    });
+                    
+                    Task.WaitAll();
                     // save into db
                     break;
                 case '2':
