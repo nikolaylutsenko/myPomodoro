@@ -8,7 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.3.0" />
       <PackageReference Include="ConsoleTableExt" Version="3.1.9" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="ShellProgressBar" Version="5.1.0" />
       <PackageReference Include="Spectre.Console" Version="0.42.1-preview.0.19" />
       <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
@@ -18,7 +23,6 @@
       <None Remove="ticking.mp3" />
       <None Remove="MyPomodoro.Core\**" />
       <None Remove="MyPomodoro.Dal\**" />
-      <None Remove="MinIoc\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,18 +35,22 @@
     <ItemGroup>
       <Compile Remove="MyPomodoro.Core\**" />
       <Compile Remove="MyPomodoro.Dal\**" />
-      <Compile Remove="MinIoc\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="MyPomodoro.Core\**" />
       <EmbeddedResource Remove="MyPomodoro.Dal\**" />
-      <EmbeddedResource Remove="MinIoc\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="MinIoc\MinIoc.csproj" />
       <ProjectReference Include="MyPomodoro.Dal\MyPomodoro.Dal.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Database.db" />
+      <Resource Include="Database.db">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>

@@ -1,60 +1,62 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyPomodoro.Core.Entities;
 
 namespace MyPomodoro.Dal
 {
-    public interface IGenericRepository : IDisposable
+    public interface IGenericRepository<T> : IDisposable
     {
-        T Insert<T>(T model);
-        T Update<T>(T model);
-        bool Delete<T>(T model);
-        T Select<T>(int pk) where T : new();
-        T[] SelectAll<T>() where T : new();
+        Task Insert(T model);
+        Task Update(T model);
+        Task Delete(T model);
+        Task<IEnumerable<T>> List();
     }
     
-    public class GenericRepository : IDisposable
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly AppContext _context;
+        private readonly DbSet<T> _dbSet;
 
         public GenericRepository()
         {
             _context = new AppContext();
+            _dbSet = _context.Set<T>();
         }
  
-        public async Task<T> Insert<T>(T model)
+        public async Task Insert(T model)
         {
-            var iRes = await _context.AddAsync(model);
-            return model;
+            try
+            {
+                await _context.Pomodoros.AddAsync(model as Pomodoro);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
  
-        public T Update<T>(T model)
+        public async Task Update(T model)
         {
-            int iRes = Context.Update(model);
-            return model;
+            _dbSet.Update(model);
+            await _context.SaveChangesAsync();
         }
  
-        public bool Delete<T>(T model)
+        public async Task Delete(T model)
         {
-            int iRes = Context.Delete(model);
-            return iRes.Equals(1);
+            _dbSet.Remove(model);
+            await _context.SaveChangesAsync();
         }
- 
-        public T Select<T>(int pk) where T : new()
+
+        public async Task<IEnumerable<T>> List()
         {
-            var map = Context.GetMapping(typeof(T));
-            return Context.Query<T>(map.GetByPrimaryKeySql, pk).First();
+            var result = _dbSet.AsQueryable();
+            return await result.ToListAsync();
         }
- 
-        public void SelectAlls()
-        {
-            Context.Table<People>().ToArray();
-        }
- 
-        public T[] SelectAll<T>() where T : new()
-        {
-            return new TableQuery<T>(Context).ToArray();
-        }
-     
+
         private bool disposed = false;
  
         protected virtual void Dispose(bool disposing)
@@ -63,7 +65,7 @@ namespace MyPomodoro.Dal
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    _context.Dispose();
                 }
             }
             this.disposed = true;
