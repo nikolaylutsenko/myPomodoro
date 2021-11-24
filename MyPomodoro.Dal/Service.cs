@@ -1,76 +1,61 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyPomodoro.Core.Entities;
+using MyPomodoro.Core.Interfaces;
 
 namespace MyPomodoro.Dal
 {
-    public interface IGenericRepository<T> : IDisposable
-    {
-        Task Insert(T model);
-        Task Update(T model);
-        Task Delete(T model);
-        Task<IEnumerable<T>> List();
-    }
-    
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class Service<T> : IService<T> where T : class
     {
         private readonly AppContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository()
+        public Service()
         {
             _context = new AppContext();
             _dbSet = _context.Set<T>();
         }
- 
-        public async Task Insert(T model)
+
+        public async Task AddAsync(T model)
         {
-            try
-            {
-                await _context.Pomodoros.AddAsync(model as Pomodoro);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            await _dbSet.AddAsync(model);
+            await _context.SaveChangesAsync();
         }
- 
-        public async Task Update(T model)
+
+        public async Task UpdateAsync(T model)
         {
             _dbSet.Update(model);
             await _context.SaveChangesAsync();
         }
- 
-        public async Task Delete(T model)
+
+        public async Task DeleteAsync(T model)
         {
             _dbSet.Remove(model);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> List()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             var result = _dbSet.AsQueryable();
             return await result.ToListAsync();
         }
 
-        private bool disposed = false;
- 
+        private bool _disposed;
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
             }
-            this.disposed = true;
+
+            _disposed = true;
         }
- 
+
         public void Dispose()
         {
             Dispose(true);

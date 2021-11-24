@@ -36,7 +36,7 @@ namespace MyPomodoro
 
             // Usually you're only interested in exposing the type
             // via its interface:
-            builder.RegisterType<GenericRepository<Pomodoro>>().As<IGenericRepository<Pomodoro>>();
+            builder.RegisterType<Service<Pomodoro>>().As<IService<Pomodoro>>();
 
             // However, if you want BOTH services (not as common)
             // you can say so:
@@ -126,8 +126,8 @@ namespace MyPomodoro
                     {
                         try
                         {
-                            var repository = scope.Resolve<IGenericRepository<Pomodoro>>();
-                            repository.Insert(pomodoro);
+                            var repository = scope.Resolve<IService<Pomodoro>>();
+                            repository.AddAsync(pomodoro);
                         }
                         catch (Exception e)
                         {
@@ -149,8 +149,8 @@ namespace MyPomodoro
                     {
                         try
                         {
-                            var repository = scope.Resolve<IGenericRepository<Pomodoro>>();
-                            pomodoros = await repository.List();
+                            var repository = scope.Resolve<IService<Pomodoro>>();
+                            pomodoros = await repository.GetAllAsync();
                         }
                         catch (Exception e)
                         {
