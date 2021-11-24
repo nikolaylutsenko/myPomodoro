@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Media;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Autofac;
 using MyPomodoro.Core.Entities;
 using MyPomodoro.Core.Interfaces;
@@ -14,6 +18,7 @@ namespace MyPomodoro
     {
         // Algorithm:
         // Start app
+        // Read settings.json
         // Connect to SqLite
         // Choose type of pomodoro - work, short break, long break
         // Enter name(optional)
@@ -38,6 +43,9 @@ namespace MyPomodoro
             //uilder.RegisterType<SomeType>().AsSelf().As<IService>();
 
             var Container = builder.Build();
+            var settingsAddress = Environment.CurrentDirectory + @"\settings.json";
+            using StreamReader sr = new StreamReader(settingsAddress);
+            var settings = await JsonSerializer.DeserializeAsync<AppSettings>(sr.BaseStream);
 
             Begin: // use for return to beginning
             Console.WriteLine("Choose what to start - 1)Concentrate; 2)Short break; 3)Long break?");

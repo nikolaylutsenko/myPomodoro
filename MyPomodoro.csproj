@@ -51,6 +51,10 @@
       <Resource Include="Database.db">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
+      <None Remove="settings.json" />
+      <Resource Include="settings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>
