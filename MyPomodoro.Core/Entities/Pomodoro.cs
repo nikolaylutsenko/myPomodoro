@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPomodoro.Core.Entities
 {
-    public class Pomodoro
+    public record Pomodoro
     {
         [Key]
-        public int Id { get; set; }
-        public TimeOnly? StartTime { get; set; }
-        public TimeOnly? EndTime { get; set; }
-        public bool IsSuccessful { get; set; }
-        public PomodoroType Type { get; set; }
-        public string? Comment { get; set; }
-        public DateTime PomodoroDate { get; set; }
+        public int Id { get; init; }
+        public TimeOnly? StartTime { get; init; }
+        public TimeOnly? EndTime { get; init; }
+        public bool IsSuccessful { get; init; }
+        public PomodoroType Type { get; init; }
+        public string? Comment { get; init; }
+        public DateTime PomodoroDate { get; init; }
     }
 }

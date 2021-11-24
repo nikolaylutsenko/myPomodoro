@@ -27,9 +27,9 @@
 
     <ItemGroup>
       <None Remove="ticking.wav" />
-      <AdditionalFiles Include="ticking.wav">
+      <Resource Include="ticking.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </AdditionalFiles>
+      </Resource>
     </ItemGroup>
 
     <ItemGroup>

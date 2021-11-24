@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Media;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -29,6 +30,8 @@ namespace MyPomodoro
         // Save to Db
         // Ask what is next - by plan or personal chose
 
+        public static event Action OnStop;
+
         private static async Task Main(string[] args)
         {
             // Create your builder.
@@ -38,133 +41,90 @@ namespace MyPomodoro
             // via its interface:
             builder.RegisterType<Service<Pomodoro>>().As<IService<Pomodoro>>();
 
-            // However, if you want BOTH services (not as common)
-            // you can say so:
-            //uilder.RegisterType<SomeType>().AsSelf().As<IService>();
+            // create IOC container
+            var container = builder.Build();
 
-            var Container = builder.Build();
+            // read settings file into object
             var settingsAddress = Environment.CurrentDirectory + @"\settings.json";
             using StreamReader sr = new StreamReader(settingsAddress);
             var settings = await JsonSerializer.DeserializeAsync<AppSettings>(sr.BaseStream);
 
             Begin: // use for return to beginning
-            Console.WriteLine("Choose what to start - 1)Concentrate; 2)Short break; 3)Long break?");
+            Console.WriteLine("Choose what to start - 1)Concentrate; 2)Short break; 3)Long break; 4)Show all todays pomodoros?");
             var key = Console.ReadKey();
             Console.WriteLine();
-
-            var keepRunning = true;
 
             Console.CancelKeyPress += delegate(object sender, ConsoleCancelEventArgs e)
             {
                 Console.WriteLine("You press cancel. Return to begin.");
                 e.Cancel = true;
-                keepRunning = false;
+                OnStop?.Invoke();
             };
 
-            int i = 0;
-            SoundPlayer typewriter = new SoundPlayer();
+            var typewriter = new SoundPlayer();
             typewriter.SoundLocation = Environment.CurrentDirectory + @"\ticking.wav";
             Pomodoro pomodoro = null;
 
             switch (key.KeyChar)
             {
                 case '1':
-                    // here must be method incupsulate all this shit with sound and ui
-                    Console.WriteLine("Some comment?");
-                    var comment = Console.ReadLine();
-                    
-                    TimeOnly beginTime;
-                    await Task.Run(() =>
+                    // here must be method encapsulate all this shit with sound and ui
+                    // method must apply pomodoro type and return pomodoro result object
+
+                    PomodoroService pomodoroService = new PomodoroService();
+                    OnStop += pomodoroService.StopLoop;
+                    pomodoro = await pomodoroService.RunAsync(PomodoroType.Concentration, typewriter, settings.PlaySound);
+                    OnStop -= pomodoroService.StopLoop;
+                    // save if chosen option in settings
+                    if (settings.StoreInDb)
                     {
-                        const int totalTicks = 10;
-                        var option = new ProgressBarOptions
+                        using (var scope = container.BeginLifetimeScope())
                         {
-                            ForegroundColor = ConsoleColor.Yellow,
-                            ForegroundColorDone = ConsoleColor.DarkGreen,
-                            BackgroundColor = ConsoleColor.DarkGray,
-                            BackgroundCharacter = '\u2593'
-                        };
-
-                        pomodoro = new Pomodoro
-                        {
-                            Type = PomodoroType.ShortBreak,
-                            Comment = string.IsNullOrEmpty(comment) ? null : comment,
-                            StartTime = TimeOnly.FromDateTime(DateTime.Now),
-                            EndTime = null,
-                            PomodoroDate = DateTime.Now,
-                            IsSuccessful = false
-                        };
-
-                        var timePlus = pomodoro.StartTime.Value.Second + totalTicks;
-
-                        typewriter.PlayLooping();
-
-                        using var pbar = new ProgressBar(totalTicks, pomodoro.Type.ToString(), option);
-
-                        TimeOnly tickTime = beginTime;
-
-                        while (keepRunning)
-                        {
-                            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
-
-                            if (tickTime.Second < currentTime.Second)
+                            try
                             {
-                                pbar.Tick();
-                                tickTime = currentTime;
+                                var repository = scope.Resolve<IService<Pomodoro>>();
+                                repository.AddAsync(pomodoro);
                             }
-
-                            if (timePlus < currentTime.Second)
+                            catch (Exception e)
                             {
-                                keepRunning = false;
+                                Console.WriteLine(e);
+                                throw;
                             }
-                        }
-                        pomodoro.EndTime = TimeOnly.FromDateTime(DateTime.Now);
-                        typewriter.Stop();
-                    });
-                    pomodoro.IsSuccessful = true;
-                    using (var scope = Container.BeginLifetimeScope())
-                    {
-                        try
-                        {
-                            var repository = scope.Resolve<IService<Pomodoro>>();
-                            repository.AddAsync(pomodoro);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            throw;
                         }
                     }
-                    Task.WaitAll();
-                    // save into db
+
+                    //
                     break;
                 case '2':
                     break;
                 case '3':
                     break;
                 case '4':
+                    // case for list all today pomodoros
                     Console.WriteLine("Show all pomodoros");
                     IEnumerable<Pomodoro> pomodoros = new List<Pomodoro>();
-                    using (var scope = Container.BeginLifetimeScope())
+                    using (var scope = container.BeginLifetimeScope())
                     {
-                        try
-                        {
-                            var repository = scope.Resolve<IService<Pomodoro>>();
-                            pomodoros = await repository.GetAllAsync();
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            throw;
-                        }
+                        var repository = scope.Resolve<IService<Pomodoro>>();
+                        pomodoros = await repository.GetAllAsync();
                     }
+
+                    foreach (var pom in pomodoros.Where(x => x.PomodoroDate.Date == DateTime.Now.Date))
+                    {
+                        Console.WriteLine(pom);
+                    }
+                    Console.WriteLine("Press any key to exit.");
+                    Console.ReadKey();
+                    //
                     break;
                 default:
                     MessageWriter.WriteWarning("Wrong enter");
                     goto Begin;
             }
 
+            Console.Clear();
             Console.WriteLine("FINISH!");
+            goto Begin;
         }
     }
 };
