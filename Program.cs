@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using Autofac;
 using MyPomodoro.Core.Entities;
 using MyPomodoro.Core.Interfaces;
+using MyPomodoro.Core.Settings;
 using MyPomodoro.Dal;
 using ShellProgressBar;
 using Spectre.Console;
@@ -40,17 +41,16 @@ namespace MyPomodoro
             // Usually you're only interested in exposing the type
             // via its interface:
             builder.RegisterType<Service<Pomodoro>>().As<IService<Pomodoro>>();
+            builder.RegisterType<PomodoroService>().As<IPomodoroService>();
 
             // create IOC container
             var container = builder.Build();
 
-            // read settings file into object
-            var settingsAddress = Environment.CurrentDirectory + @"\settings.json";
-            using StreamReader sr = new StreamReader(settingsAddress);
-            var settings = await JsonSerializer.DeserializeAsync<AppSettings>(sr.BaseStream);
+            using var scope = container.BeginLifetimeScope();
 
             Begin: // use for return to beginning
-            Console.WriteLine("Choose what to start - 1)Concentrate; 2)Short break; 3)Long break; 4)Show all todays pomodoros?");
+            Console.WriteLine(
+                "Choose what to start - 1)Concentrate; 2)Short break; 3)Long break; 4)Show all todays pomodoros? 5) Finish program");
             var key = Console.ReadKey();
             Console.WriteLine();
 
@@ -61,61 +61,40 @@ namespace MyPomodoro
                 OnStop?.Invoke();
             };
 
-            var typewriter = new SoundPlayer();
-            typewriter.SoundLocation = Environment.CurrentDirectory + @"\ticking.wav";
-            Pomodoro pomodoro = null;
+            var pomodoroService = scope.Resolve<IPomodoroService>();
+
 
             switch (key.KeyChar)
             {
                 case '1':
-                    // here must be method encapsulate all this shit with sound and ui
-                    // method must apply pomodoro type and return pomodoro result object
-
-                    PomodoroService pomodoroService = new PomodoroService();
                     OnStop += pomodoroService.StopLoop;
-                    pomodoro = await pomodoroService.RunAsync(PomodoroType.Concentration, typewriter, settings.PlaySound);
+                    await pomodoroService.RunAsync(PomodoroType.Concentration, container);
                     OnStop -= pomodoroService.StopLoop;
-                    // save if chosen option in settings
-                    if (settings.StoreInDb)
-                    {
-                        using (var scope = container.BeginLifetimeScope())
-                        {
-                            try
-                            {
-                                var repository = scope.Resolve<IService<Pomodoro>>();
-                                repository.AddAsync(pomodoro);
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e);
-                                throw;
-                            }
-                        }
-                    }
-
-                    //
                     break;
                 case '2':
+                    OnStop += pomodoroService.StopLoop;
+                    await pomodoroService.RunAsync(PomodoroType.ShortBreak, container);
+                    OnStop -= pomodoroService.StopLoop;
                     break;
                 case '3':
+                    OnStop += pomodoroService.StopLoop;
+                    await pomodoroService.RunAsync(PomodoroType.LongBreak, container);
+                    OnStop -= pomodoroService.StopLoop;
                     break;
                 case '4':
-                    // case for list all today pomodoros
+                    // case for list all today's pomodoros
                     Console.WriteLine("Show all pomodoros");
                     IEnumerable<Pomodoro> pomodoros = new List<Pomodoro>();
-                    using (var scope = container.BeginLifetimeScope())
-                    {
-                        var repository = scope.Resolve<IService<Pomodoro>>();
-                        pomodoros = await repository.GetAllAsync();
-                    }
+                    var repository = scope.Resolve<IService<Pomodoro>>();
+                    pomodoros = await repository.GetAllAsync();
 
                     foreach (var pom in pomodoros.Where(x => x.PomodoroDate.Date == DateTime.Now.Date))
                     {
                         Console.WriteLine(pom);
                     }
+
                     Console.WriteLine("Press any key to exit.");
                     Console.ReadKey();
-                    //
                     break;
                 default:
                     MessageWriter.WriteWarning("Wrong enter");

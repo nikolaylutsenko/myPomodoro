@@ -13,5 +13,19 @@ namespace MyPomodoro.Core.Entities
         public PomodoroType Type { get; init; }
         public string? Comment { get; init; }
         public DateTime PomodoroDate { get; init; }
+
+        public Pomodoro()
+        {
+        }
+        
+        public Pomodoro(TimeOnly startTime, TimeOnly endTime, PomodoroType pomodoroType, string comment, bool isSuccessful = false)
+        {
+            StartTime = startTime;
+            EndTime = endTime;
+            Type = pomodoroType;
+            Comment = comment;
+            IsSuccessful = isSuccessful;
+            PomodoroDate = DateTime.Now;
+        }
     }
 }

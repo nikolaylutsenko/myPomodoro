@@ -7,9 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.3.0" />
       <PackageReference Include="Humanizer" Version="2.13.14" />
       <PackageReference Include="ShellProgressBar" Version="5.1.0" />
       <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Settings\settings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>

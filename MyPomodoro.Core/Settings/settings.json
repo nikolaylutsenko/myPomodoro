@@ -1,5 +1,5 @@
 {
-  "StoreInDb": false,
+  "StoreInDb": true,
   "PlaySound": true,
   "Volume": 100,
   "ConcentrationTimeInMinutes": 25,
