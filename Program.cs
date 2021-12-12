@@ -101,7 +101,6 @@ namespace MyPomodoro
                     goto Begin;
             }
 
-            Console.Clear();
             Console.WriteLine("FINISH!");
             goto Begin;
         }
