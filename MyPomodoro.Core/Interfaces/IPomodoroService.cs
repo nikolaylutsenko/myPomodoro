@@ -16,8 +16,8 @@ public class PomodoroService : IPomodoroService
 {
     private bool _keepRunning = true;
     private readonly AppSettings _settings;
-    TimeOnly beginTime;
-    const int totalTicks = 10;
+    
+    
 
     public PomodoroService()
     {
@@ -29,6 +29,11 @@ public class PomodoroService : IPomodoroService
     {
         string? comment = null;
         PlaySoundService playSoundService = null;
+        TimeOnly beginTime;
+        // todo: moved this shit into switch statement below
+        const int totalTicks = 10;
+        TimeOnly tickTime = beginTime;
+        var isSuccessful = false;
         
         if (pomodoroType == PomodoroType.Concentration)
         {
@@ -78,9 +83,6 @@ public class PomodoroService : IPomodoroService
 
         using var pbar = new ProgressBar(totalTicks, pomodoro.Type.ToString().Humanize(LetterCasing.Title), option);
 
-        TimeOnly tickTime = beginTime;
-        var isSuccessful = false;
-            
         while (_keepRunning)
         {
             var currentTime = TimeOnly.FromDateTime(DateTime.Now);
