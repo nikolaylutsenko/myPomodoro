@@ -1,9 +1,8 @@
-﻿namespace MyPomodoro.Core.Entities
+﻿namespace MyPomodoro.Core.Entities;
+
+public enum PomodoroType
 {
-    public enum PomodoroType
-    {
-        Concentration,
-        ShortBreak,
-        LongBreak
-    }
+    Concentration,
+    ShortBreak,
+    LongBreak
 }

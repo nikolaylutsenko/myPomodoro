@@ -1,22 +1,43 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.3.0" />
-      <PackageReference Include="Humanizer" Version="2.13.14" />
-      <PackageReference Include="ShellProgressBar" Version="5.1.0" />
-      <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
+      <None Remove="settings.json" />
+      <None Remove="Sounds\breack_relese.wav" />
+      <None Remove="Sounds\error_release.wav" />
+      <None Remove="Sounds\success_release.wav" />
+      <None Remove="Sounds\ticking_release.wav" />
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Settings\settings.json">
+      <Content Include="settings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
+      </Content>
+      <Content Include="Sounds\breack_relese.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Sounds\error_release.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Sounds\success_release.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Sounds\ticking_release.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.4.0" />
+      <PackageReference Include="ConsoleTables" Version="2.4.2" />
+      <PackageReference Include="Humanizer" Version="2.14.1" />
+      <PackageReference Include="ShellProgressBar" Version="5.1.0" />
+      <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

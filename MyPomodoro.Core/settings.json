@@ -1,0 +1,8 @@
+{
+  "StoreInDb": true,
+  "PlaySound": true,
+  "Volume": 1,
+  "ConcentrationTimeInMinutes": 25,
+  "ShortBreakInMinutes": 5,
+  "LongBreakInMinutes": 15
+}

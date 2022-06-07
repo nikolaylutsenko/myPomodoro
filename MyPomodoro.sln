@@ -1,10 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro", "MyPomodoro.csproj", "{7A2DDD4E-C4A3-4FCE-8963-D39A6CE8A579}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPomodoro.Console", "MyPomodoro.Console\MyPomodoro.Console.csproj", "{7A2DDD4E-C4A3-4FCE-8963-D39A6CE8A579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro.Dal", "MyPomodoro.Dal\MyPomodoro.Dal.csproj", "{A5B16463-5A42-437B-81A4-6F54569A7821}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPomodoro.Dal", "MyPomodoro.Dal\MyPomodoro.Dal.csproj", "{A5B16463-5A42-437B-81A4-6F54569A7821}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro.Core", "MyPomodoro.Core\MyPomodoro.Core.csproj", "{F2C853D3-38FE-4D53-8E3F-868D4891248D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPomodoro.Core", "MyPomodoro.Core\MyPomodoro.Core.csproj", "{F2C853D3-38FE-4D53-8E3F-868D4891248D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPomodoro.Services", "MyPomodoro.Services\MyPomodoro.Services.csproj", "{909F3D63-0AA0-4309-BF92-88778EDEFD1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +29,15 @@ Global
 		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2C853D3-38FE-4D53-8E3F-868D4891248D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909F3D63-0AA0-4309-BF92-88778EDEFD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909F3D63-0AA0-4309-BF92-88778EDEFD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909F3D63-0AA0-4309-BF92-88778EDEFD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909F3D63-0AA0-4309-BF92-88778EDEFD1D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B31CE4D5-6AD3-4F70-97D9-38A2FB58EAAB}
 	EndGlobalSection
 EndGlobal

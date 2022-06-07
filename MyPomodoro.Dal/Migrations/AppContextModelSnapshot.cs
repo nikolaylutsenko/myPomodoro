@@ -3,13 +3,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyPomodoro.Dal;
+using MyPomodoro.Dal.Context;
 
 #nullable disable
 
 namespace MyPomodoro.Dal.Migrations
 {
-    [DbContext(typeof(AppContext))]
+    [DbContext(typeof(Context.AppContext))]
     partial class AppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

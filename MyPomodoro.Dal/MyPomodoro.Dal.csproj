@@ -1,10 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="DbFile\Database.db" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="DbFile\Database.db">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
@@ -17,6 +27,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyPomodoro.Core\MyPomodoro.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="DbFile\Database.db" />
     </ItemGroup>
 
 </Project>

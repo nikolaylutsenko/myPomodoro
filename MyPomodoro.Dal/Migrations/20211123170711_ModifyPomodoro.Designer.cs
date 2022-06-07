@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyPomodoro.Dal;
+using MyPomodoro.Dal.Context;
 
 #nullable disable
 
 namespace MyPomodoro.Dal.Migrations
 {
-    [DbContext(typeof(AppContext))]
+    [DbContext(typeof(Context.AppContext))]
     [Migration("20211123170711_ModifyPomodoro")]
     partial class ModifyPomodoro
     {
