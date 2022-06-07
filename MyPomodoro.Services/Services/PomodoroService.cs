@@ -27,7 +27,7 @@ public class PomodoroService : IPomodoroService
 
         if (pomodoroType == PomodoroType.Concentration)
         {
-            Console.WriteLine("Some comment?");
+            Console.WriteLine("Some comment (Enter if without comment)?");
 
             comment = Console.ReadLine();
 
